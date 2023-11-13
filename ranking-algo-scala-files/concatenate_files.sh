@@ -1,18 +1,20 @@
 #!/bin/bash
 
-# Create the concatenated_files directory if it doesn't exist
-mkdir -p concatenated_files
+# Navigate to the directory containing the files
+cd concatenated_files
 
-count=0
-file_number=1
+# Loop through the files in steps of 2
+for i in {1..26..2}
+do
+    # Calculate the next file number
+    j=$((i + 1))
 
-for file in *.scala; do
-    if (( count % 10 == 0 )); then
-        if (( count > 0 )); then
-            file_number=$((file_number + 1))
-        fi
-        current_file="concatenated_files/concat_$file_number.scala"
+    # Check if the next file exists
+    if [ -f "concat_$j.scala" ]; then
+        # Concatenate the pair of files and output to a new file
+        cat "concat_$i.scala" "concat_$j.scala" > "concatenated_$i-$j.scala"
+        echo "Concatenated files concat_$i.scala and concat_$j.scala into concatenated_$i-$j.scala"
+    else
+        echo "File concat_$j.scala does not exist. Skipping concatenation with concat_$i.scala."
     fi
-    cat "$file" >> "$current_file"
-    count=$((count + 1))
 done
